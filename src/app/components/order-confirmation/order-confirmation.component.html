@@ -1,0 +1,80 @@
+<!-- order-confirmation.component.html -->
+<div class="container mt-4" *ngIf="order">
+    <div class="card border-success mb-4">
+      <div class="card-header bg-success text-white">
+        <h3 class="mb-0">Order Confirmed</h3>
+      </div>
+      <div class="card-body">
+        <div class="text-center mb-4">
+          <i class="bi bi-check-circle-fill text-success display-1"></i>
+          <h4 class="mt-3">Thank you for your order!</h4>
+          <p class="lead">Your order #{{ order.id }} has been received and is being processed.</p>
+        </div>
+        
+        <div class="row">
+          <div class="col-md-6 mb-4">
+            <h5>Customer Information</h5>
+            <p><strong>Name:</strong> {{ order.customerInfo.name }}</p>
+            <p><strong>Email:</strong> {{ order.customerInfo.email }}</p>
+            <p><strong>Phone:</strong> {{ order.customerInfo.phone }}</p>
+          </div>
+          
+          <div class="col-md-6 mb-4">
+            <h5>Shipping Address</h5>
+            <p>{{ order.customerInfo.address.street }}</p>
+            <p>{{ order.customerInfo.address.city }}, {{ order.customerInfo.address.state }} {{ order.customerInfo.address.zipCode }}</p>
+            <p>{{ order.customerInfo.address.country }}</p>
+          </div>
+        </div>
+        
+        <h5>Order Summary</h5>
+        <div class="table-responsive mb-4">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Product</th>
+                <th>Quantity</th>
+                <th>Price</th>
+                <th>Total</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of order.items">
+                <td>{{ item.productName }}</td>
+                <td>{{ item.quantity }}</td>
+                <td>${{ item.price.toFixed(2) }}</td>
+                <td>${{ (item.price * item.quantity).toFixed(2) }}</td>
+              </tr>
+            </tbody>
+            <tfoot>
+              <tr>
+                <td colspan="3" class="text-end">Subtotal:</td>
+                <td>${{ order.subtotal.toFixed(2) }}</td>
+              </tr>
+              <tr>
+                <td colspan="3" class="text-end">Tax:</td>
+                <td>${{ order.tax.toFixed(2) }}</td>
+              </tr>
+              <tr>
+                <td colspan="3" class="text-end">Shipping:</td>
+                <td>{{ order.shipping === 0 ? 'Free' : '$' + order.shipping.toFixed(2) }}</td>
+              </tr>
+              <tr>
+                <td colspan="3" class="text-end fw-bold">Total:</td>
+                <td class="fw-bold">${{ order.total.toFixed(2) }}</td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+        
+        <div class="d-flex justify-content-center gap-3 mb-3">
+          <button class="btn btn-success" (click)="sendToWhatsApp()">
+            <i class="bi bi-whatsapp me-2"></i> Send Order to WhatsApp
+          </button>
+          <a routerLink="/products" class="btn btn-primary">
+            Continue Shopping
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>

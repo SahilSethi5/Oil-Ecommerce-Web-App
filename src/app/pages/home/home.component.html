@@ -1,0 +1,32 @@
+<!-- src/app/pages/home/home.component.html -->
+<section class="hero bg-dark text-white py-5 mb-5">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-6">
+          <h1>Premium Quality Oils</h1>
+          <p class="lead">Discover our selection of premium, organic oils sourced from around the world.</p>
+          <a routerLink="/products" class="btn btn-primary btn-lg">Shop Now</a>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  <section class="featured-products mb-5">
+    <div class="container">
+      <h2 class="text-center mb-4">Featured Products</h2>
+      
+      <!-- Debug info -->
+      <div *ngIf="featuredProducts.length === 0" class="alert alert-warning">
+        No featured products found. Please check the product service.
+      </div>
+      
+      <div class="row">
+        <div class="col-md-4 mb-4" *ngFor="let product of featuredProducts">
+          <app-product-card 
+            [product]="product" 
+            (addToCart)="onAddToCart($event)">
+          </app-product-card>
+        </div>
+      </div>
+    </div>
+  </section>

@@ -1,0 +1,146 @@
+<!-- product-detail.component.html -->
+<div class="container mt-4" *ngIf="product">
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a routerLink="/">Home</a></li>
+        <li class="breadcrumb-item"><a routerLink="/products">Products</a></li>
+        <li class="breadcrumb-item active">{{ product.name }}</li>
+      </ol>
+    </nav>
+    
+    <div class="card mb-4">
+      <div class="row g-0">
+        <div class="col-md-5">
+          <div class="p-3 text-center">
+            <img [src]="product.imageUrl" [alt]="product.name" class="img-fluid">
+          </div>
+        </div>
+        
+        <div class="col-md-7">
+          <div class="card-body">
+            <h1 class="card-title">{{ product.name }}</h1>
+            <p class="fs-3 fw-bold text-primary">${{ product.price.toFixed(2) }}</p>
+            <p class="text-muted">Volume: {{ product.volume }}</p>
+            
+            <p class="card-text mb-4">{{ product.description }}</p>
+            
+            <div class="mb-3">
+              <label for="quantity" class="form-label">Quantity:</label>
+              <div class="input-group" style="width: 130px;">
+                <button class="btn btn-outline-secondary" type="button" (click)="decreaseQuantity()">-</button>
+                <input type="number" id="quantity" class="form-control text-center" [(ngModel)]="quantity" min="1">
+                <button class="btn btn-outline-secondary" type="button" (click)="increaseQuantity()">+</button>
+              </div>
+            </div>
+            
+            <div class="d-flex gap-2 mb-4">
+                <!-- Continuing product-detail.component.html -->
+             <div class="d-flex gap-2 mb-4">
+              <button class="btn btn-primary" (click)="addToCart()">
+                Add to Cart
+              </button>
+              <button class="btn btn-success" (click)="buyNow()">
+                Buy Now
+              </button>
+            </div>
+            
+            <div class="d-flex align-items-center gap-3">
+              <div *ngIf="product.inStock" class="text-success">
+                <i class="bi bi-check-circle-fill"></i> In Stock
+              </div>
+              <div *ngIf="!product.inStock" class="text-danger">
+                <i class="bi bi-x-circle-fill"></i> Out of Stock
+              </div>
+              <div class="text-muted">
+                Category: {{ product.category | titlecase }}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="card mb-4">
+      <div class="card-header">
+        <ul class="nav nav-tabs card-header-tabs">
+          <li class="nav-item">
+            <button class="nav-link" [class.active]="activeTab === 'specifications'" 
+              (click)="setActiveTab('specifications')">Specifications</button>
+          </li>
+          <li class="nav-item">
+            <button class="nav-link" [class.active]="activeTab === 'benefits'" 
+              (click)="setActiveTab('benefits')">Benefits</button>
+          </li>
+          <li class="nav-item">
+            <button class="nav-link" [class.active]="activeTab === 'usage'" 
+              (click)="setActiveTab('usage')">Usage Guide</button>
+          </li>
+        </ul>
+      </div>
+      
+      <div class="card-body">
+        <div [ngSwitch]="activeTab">
+          <div *ngSwitchCase="'specifications'">
+            <h5 class="card-title">Product Specifications</h5>
+            <ul class="list-group list-group-flush" *ngIf="product.specifications">
+              <li class="list-group-item"><strong>Origin:</strong> {{ product.specifications.origin }}</li>
+              <li class="list-group-item"><strong>Purity:</strong> {{ product.specifications.purity }}</li>
+              <li class="list-group-item"><strong>Type:</strong> {{ product.specifications.type }}</li>
+              <li class="list-group-item"><strong>Extraction Method:</strong> {{ product.specifications.extraction }}</li>
+            </ul>
+          </div>
+          
+          <div *ngSwitchCase="'benefits'">
+            <h5 class="card-title">Benefits</h5>
+            <ul class="list-group list-group-flush" *ngIf="product.specifications?.benefits">
+              <li class="list-group-item" *ngFor="let benefit of product.specifications.benefits">
+                <i class="bi bi-check-circle-fill text-success me-2"></i> {{ benefit }}
+              </li>
+            </ul>
+          </div>
+          
+          <div *ngSwitchCase="'usage'">
+            <h5 class="card-title">Usage Guide</h5>
+            <p>Detailed instructions on how to use {{ product.name }} effectively:</p>
+            
+            <div [ngSwitch]="product.category">
+              <div *ngSwitchCase="'cooking'">
+                <h6>Cooking Usage:</h6>
+                <ul class="list-unstyled">
+                  <li><i class="bi bi-arrow-right-short"></i> Suitable for cooking temperatures up to {{ product.name.includes('Olive') ? '375°F' : '450°F' }}.</li>
+                  <li><i class="bi bi-arrow-right-short"></i> Use for sautéing, baking, or as a salad dressing.</li>
+                  <li><i class="bi bi-arrow-right-short"></i> Store in a cool, dark place to maintain freshness.</li>
+                  <li><i class="bi bi-arrow-right-short"></i> Ideal as a finishing oil to enhance flavors in dishes.</li>
+                </ul>
+              </div>
+              <div *ngSwitchCase="'cosmetic'">
+                <h6>Cosmetic Usage:</h6>
+                <ul class="list-unstyled">
+                  <li><i class="bi bi-arrow-right-short"></i> Apply a few drops to damp skin or hair.</li>
+                  <li><i class="bi bi-arrow-right-short"></i> Can be used as a carrier oil for essential oils.</li>
+                  <li><i class="bi bi-arrow-right-short"></i> Store away from direct sunlight.</li>
+                  <li><i class="bi bi-arrow-right-short"></i> Perform a patch test before first use.</li>
+                </ul>
+              </div>
+              <div *ngSwitchDefault>
+                <h6>General Usage:</h6>
+                <ul class="list-unstyled">
+                  <li><i class="bi bi-arrow-right-short"></i> Follow specific guidelines based on your intended use.</li>
+                  <li><i class="bi bi-arrow-right-short"></i> Store in a cool, dark place to maintain quality.</li>
+                  <li><i class="bi bi-arrow-right-short"></i> For external use only unless specifically labeled for consumption.</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="container mt-4" *ngIf="!product">
+    <div class="alert alert-warning">
+      <h4 class="alert-heading">Product Not Found</h4>
+      <p>The product you're looking for doesn't exist or has been removed.</p>
+      <a routerLink="/products" class="btn btn-primary mt-3">Browse Products</a>
+    </div>
+  </div>

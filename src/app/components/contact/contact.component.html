@@ -1,0 +1,92 @@
+<!-- contact.component.html -->
+<div class="container mt-4">
+    <h1>Contact Us</h1>
+    
+    <div class="row mt-4">
+      <div class="col-lg-6">
+        <div class="card mb-4">
+          <div class="card-body">
+            <h4 class="card-title">Send us a Message</h4>
+            
+            <div class="alert alert-success" *ngIf="submitted && contactForm.valid">
+              Thank you for your message! We'll get back to you soon.
+            </div>
+            
+            <form [formGroup]="contactForm" (ngSubmit)="onSubmit()">
+              <div class="mb-3">
+                <label for="name" class="form-label">Your Name</label>
+                <input type="text" class="form-control" id="name" formControlName="name">
+                <div class="text-danger" *ngIf="contactForm.get('name')?.invalid && contactForm.get('name')?.touched">
+                  Name is required
+                </div>
+              </div>
+              
+              <div class="mb-3">
+                <label for="email" class="form-label">Email Address</label>
+                <input type="email" class="form-control" id="email" formControlName="email">
+                <div class="text-danger" *ngIf="contactForm.get('email')?.invalid && contactForm.get('email')?.touched">
+                  Please enter a valid email address
+                </div>
+              </div>
+              
+              <div class="mb-3">
+                <label for="subject" class="form-label">Subject</label>
+                <input type="text" class="form-control" id="subject" formControlName="subject">
+                <div class="text-danger" *ngIf="contactForm.get('subject')?.invalid && contactForm.get('subject')?.touched">
+                  Subject is required
+                </div>
+              </div>
+              
+              <div class="mb-3">
+                <label for="message" class="form-label">Message</label>
+                <textarea class="form-control" id="message" rows="5" formControlName="message"></textarea>
+                <div class="text-danger" *ngIf="contactForm.get('message')?.invalid && contactForm.get('message')?.touched">
+                  Message is required
+                </div>
+              </div>
+              
+              <button type="submit" class="btn btn-primary" [disabled]="contactForm.invalid">Send Message</button>
+            </form>
+          </div>
+        </div>
+      </div>
+      
+      <div class="col-lg-6">
+        <div class="card mb-4">
+          <div class="card-body">
+            <h4 class="card-title">Contact Information</h4>
+            
+            <ul class="list-unstyled">
+              <li class="mb-3">
+                <i class="bi bi-geo-alt-fill text-primary me-2"></i>
+                <strong>Address:</strong> 123 Oil Avenue, Olive City, OL 12345
+              </li>
+              <li class="mb-3">
+                <i class="bi bi-telephone-fill text-primary me-2"></i>
+                <strong>Phone:</strong> (123) 456-7890
+              </li>
+              <li class="mb-3">
+                <i class="bi bi-envelope-fill text-primary me-2"></i>
+                <strong>Email:</strong> info@oilstore.com
+              </li>
+              <li class="mb-3">
+                <i class="bi bi-clock-fill text-primary me-2"></i>
+                <strong>Business Hours:</strong><br>
+                Monday - Friday: 9:00 AM - 6:00 PM<br>
+                Saturday: 10:00 AM - 4:00 PM<br>
+                Sunday: Closed
+              </li>
+            </ul>
+            
+            <h5 class="mt-4">Connect With Us</h5>
+            <div class="social-icons mt-3">
+              <a href="#" class="me-3 text-primary fs-4"><i class="bi bi-facebook"></i></a>
+              <a href="#" class="me-3 text-primary fs-4"><i class="bi bi-instagram"></i></a>
+              <a href="#" class="me-3 text-primary fs-4"><i class="bi bi-twitter"></i></a>
+              <a href="#" class="me-3 text-primary fs-4"><i class="bi bi-linkedin"></i></a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

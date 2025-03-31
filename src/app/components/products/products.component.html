@@ -1,0 +1,38 @@
+<!-- products.component.html -->
+<div class="container mt-4">
+    <h1 class="mb-4">Our Products</h1>
+    
+    <div class="row mb-4">
+      <div class="col-md-6 mb-3">
+        <label for="category" class="form-label">Filter by Category:</label>
+        <select id="category" class="form-select" [(ngModel)]="selectedCategory" (change)="filterProducts()">
+          <option value="all">All Categories</option>
+          <option value="cooking">Cooking Oils</option>
+          <option value="cosmetic">Cosmetic Oils</option>
+          <option value="multipurpose">Multipurpose Oils</option>
+        </select>
+      </div>
+      
+      <div class="col-md-6 mb-3">
+        <label for="sortBy" class="form-label">Sort by:</label>
+        <select id="sortBy" class="form-select" [(ngModel)]="sortBy" (change)="sortProducts()">
+          <option value="name">Name (A-Z)</option>
+          <option value="price-low">Price (Low to High)</option>
+          <option value="price-high">Price (High to Low)</option>
+        </select>
+      </div>
+    </div>
+    
+    <div class="row">
+      <div class="col-md-4 mb-4" *ngFor="let product of filteredProducts">
+        <app-product-card 
+          [product]="product"
+          (addToCart)="onAddToCart($event)">
+        </app-product-card>
+      </div>
+    </div>
+    
+    <div *ngIf="filteredProducts.length === 0" class="text-center py-5">
+      <p class="lead">No products found matching your criteria.</p>
+    </div>
+  </div>
