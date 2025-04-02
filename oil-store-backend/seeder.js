@@ -1,4 +1,3 @@
-// seeder.js
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const Product = require('./models/Product');
@@ -98,6 +97,74 @@ const products = [
       type: "Cold-pressed",
       extraction: "Expeller-pressed",
       benefits: ["Balances oil production", "Non-comedogenic", "Long shelf life"]
+    }
+  },
+  {
+    name: "Black Seed Oil",
+    description: "Cold-pressed black seed oil with immune-boosting properties.",
+    price: 22.99,
+    imageUrl: "https://via.placeholder.com/300x300?text=Black+Seed+Oil",
+    category: "health",
+    volume: "250ml",
+    inStock: true,
+    featured: false,
+    specifications: {
+      origin: "Egypt",
+      purity: "100% Pure",
+      type: "Cold-pressed",
+      extraction: "First press",
+      benefits: ["Boosts immune system", "Anti-inflammatory", "Supports digestion"]
+    }
+  },
+  {
+    name: "Hemp Seed Oil",
+    description: "Nutrient-rich hemp seed oil packed with Omega-3 and Omega-6 fatty acids.",
+    price: 20.99,
+    imageUrl: "https://via.placeholder.com/300x300?text=Hemp+Seed+Oil",
+    category: "health",
+    volume: "250ml",
+    inStock: true,
+    featured: false,
+    specifications: {
+      origin: "Canada",
+      purity: "100% Pure",
+      type: "Cold-pressed",
+      extraction: "Expeller-pressed",
+      benefits: ["Supports heart health", "Anti-inflammatory", "Rich in essential fatty acids"]
+    }
+  },
+  {
+    name: "Sesame Oil",
+    description: "Cold-pressed sesame oil perfect for Asian cuisine and skin massage.",
+    price: 16.99,
+    imageUrl: "https://via.placeholder.com/300x300?text=Sesame+Oil",
+    category: "cooking",
+    volume: "500ml",
+    inStock: true,
+    featured: true,
+    specifications: {
+      origin: "India",
+      purity: "100% Pure",
+      type: "Cold-pressed",
+      extraction: "First press",
+      benefits: ["High in antioxidants", "Supports heart health", "Great for massage therapy"]
+    }
+  },
+  {
+    name: "Almond Oil",
+    description: "Sweet almond oil ideal for skincare, haircare, and massage therapy.",
+    price: 17.99,
+    imageUrl: "https://via.placeholder.com/300x300?text=Almond+Oil",
+    category: "cosmetic",
+    volume: "200ml",
+    inStock: true,
+    featured: false,
+    specifications: {
+      origin: "USA",
+      purity: "100% Pure",
+      type: "Cold-pressed",
+      extraction: "Expeller-pressed",
+      benefits: ["Moisturizing", "Rich in Vitamin E", "Supports hair strength"]
     }
   }
 ];

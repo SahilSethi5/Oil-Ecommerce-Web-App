@@ -6,12 +6,14 @@ import { Order } from '../models/order.model';
   providedIn: 'root'
 })
 export class WhatsappService {
-  // Replace with your actual WhatsApp number
-  private whatsappNumber = "+919930256485";
+  // Your WhatsApp number
+  private whatsappNumber = "+919930256485"; // Replace with your actual WhatsApp number
   
   sendOrderToWhatsApp(order: Order): void {
+    console.log('WhatsApp service sending order:', order);
+    
     // Format the message
-    let message = `*New Order #${order.id}*\n\n`;
+    let message = `*New Order*\n\n`;
     message += `*Customer:* ${order.customerInfo.name}\n`;
     message += `*Phone:* ${order.customerInfo.phone}\n`;
     message += `*Email:* ${order.customerInfo.email}\n\n`;
@@ -35,4 +37,4 @@ export class WhatsappService {
     // Open WhatsApp in a new tab
     window.open(whatsappURL, '_blank');
   }
-} 
+}

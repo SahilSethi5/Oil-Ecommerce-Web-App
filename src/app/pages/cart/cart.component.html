@@ -42,8 +42,8 @@
                     </td>
                     <td>${{ (item.product.price * item.quantity).toFixed(2) }}</td>
                     <td>
-                      <button class="btn btn-danger btn-sm" (click)="removeItem(item.product.id)">
-                        <i class="bi bi-trash"></i> Remove
+                      <button class="btn btn-danger btn-sm" (click)="removeItem(item.product._id || item.product.id)">
+                        <i class="bi bi-trash"></i>
                       </button>
                     </td>
                   </tr>

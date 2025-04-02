@@ -72,7 +72,7 @@ export class CheckoutComponent implements OnInit {
   placeOrder(): void {
     if (this.checkoutForm.valid) {
       const orderItems: OrderItem[] = this.cartItems.map(item => ({
-        productId: item.product.id,
+        productId: item.product._id || item.product.id?.toString() || '',
         productName: item.product.name,
         quantity: item.quantity,
         price: item.product.price
@@ -88,11 +88,7 @@ export class CheckoutComponent implements OnInit {
         total: this.getTotal()
       };
       
-      this.orderService.placeOrder(order).subscribe(newOrder => {
-        // Send order to WhatsApp
-        this.whatsappService.sendOrderToWhatsApp(newOrder);
-        
-        // Clear cart and redirect to confirmation
+      this.orderService.createOrder(order).subscribe(newOrder => {
         this.cartService.clearCart();
         this.router.navigate(['/order-confirmation'], { state: { order: newOrder } });
       });

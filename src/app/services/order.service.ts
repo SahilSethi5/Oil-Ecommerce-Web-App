@@ -77,8 +77,8 @@ export class OrderService {
     // return this.http.get<Order>(`${this.apiUrl}/${id}`);
   }
 
-  updateOrderStatus(orderId: number, status: string): Observable<boolean> {
-    const order = this.orders.find(o => o.id === orderId);
+  updateOrderStatus(orderId: string, status: string): Observable<boolean> {
+    const order = this.orders.find(o => o._id === orderId);
     if (order) {
       order.status = status;
       
@@ -93,8 +93,5 @@ export class OrderService {
       return of(true);
     }
     return of(false);
-    
-    // In a real implementation:
-    // return this.http.put<Order>(`${this.apiUrl}/${id}/status`, { status });
   }
 }

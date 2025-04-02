@@ -16,7 +16,6 @@ export class ProductCardComponent {
   @Output() addToCart = new EventEmitter<Product>();
 
   addItemToCart(): void {
-    console.log('Product card: Add to cart clicked', this.product);
     this.addToCart.emit(this.product);
   }
 }

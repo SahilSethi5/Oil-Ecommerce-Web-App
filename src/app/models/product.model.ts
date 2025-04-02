@@ -1,7 +1,6 @@
-// src/app/models/product.model.ts
 export interface Product {
-  _id?: string;  // MongoDB uses _id
-  id?: number;   // Keep this for backward compatibility if needed
+  _id?: string;  // MongoDB ID
+  id?: number;   // Optional legacy ID
   name: string;
   description: string;
   price: number;

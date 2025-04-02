@@ -15,7 +15,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   if (isBrowser) {
     try {
       const authService = inject(AuthService);
-      const token = authService.token;
+      const token = authService.currentUser?.token;
       
       if (token) {
         req = req.clone({

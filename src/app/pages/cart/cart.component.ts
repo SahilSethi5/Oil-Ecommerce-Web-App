@@ -1,4 +1,4 @@
-// First, make sure your cart.component.ts is correctly set up:
+// src/app/pages/cart/cart.component.ts
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
@@ -25,14 +25,17 @@ export class CartComponent implements OnInit {
   
   updateQuantity(item: CartItem, quantity: number): void {
     if (quantity <= 0) {
-      this.removeItem(item.product.id);
+      // Use product._id if available, otherwise fall back to id
+      this.removeItem(item.product._id || 0);
     } else {
-      this.cartService.updateItemQuantity(item.product.id, quantity);
+      this.cartService.updateItemQuantity(item.product._id || 0, quantity);
     }
   }
   
-  removeItem(productId: number): void {
-    this.cartService.removeFromCart(productId);
+  removeItem(productId: string | number | undefined): void {
+    if (productId !== undefined) {
+      this.cartService.removeFromCart(productId);
+    }
   }
   
   clearCart(): void {

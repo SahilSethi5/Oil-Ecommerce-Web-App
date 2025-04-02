@@ -8,7 +8,7 @@ import { isPlatformBrowser } from '@angular/common';
 import { environment } from '../../environments/environment';
 
 export interface User {
-  _id: string;
+  _id?: string;
   name: string;
   email: string;
   role: 'admin' | 'customer';
@@ -16,12 +16,20 @@ export interface User {
 }
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class AuthService {
   private apiUrl = `${environment.apiUrl}/auth`;
   private currentUserSubject = new BehaviorSubject<User | null>(null);
   private isBrowser: boolean;
+
+  // Admin credentials for demo
+  private adminUser = {
+    email: 'admin@example.com',
+    password: 'admin123',
+    name: 'Admin User',
+    role: 'admin' as const
+  };
 
   constructor(
     private http: HttpClient,
@@ -30,7 +38,7 @@ export class AuthService {
   ) {
     this.isBrowser = isPlatformBrowser(this.platformId);
     
-    // Only access localStorage in the browser
+    // Only access localStorage in browser
     if (this.isBrowser) {
       try {
         const userData = localStorage.getItem('currentUser');
@@ -56,32 +64,32 @@ export class AuthService {
     return !!this.currentUser;
   }
 
-  public get token(): string | undefined {
-    return this.currentUser?.token;
-  }
-
   login(email: string, password: string): Observable<boolean> {
-    return this.http
-      .post<User>(`${this.apiUrl}/login`, { email, password })
-      .pipe(
-        map((user) => {
-          // Only store in localStorage in the browser
-          if (this.isBrowser) {
-            try {
-              localStorage.setItem('currentUser', JSON.stringify(user));
-            } catch (error) {
-              console.error('Error storing in localStorage:', error);
-            }
-          }
-          
-          this.currentUserSubject.next(user);
-          return true;
-        })
-      );
+    // For demo purposes using dummy admin login
+    // In a real app, this would be an API call
+    if (email === this.adminUser.email && password === this.adminUser.password) {
+      const user: User = {
+        name: this.adminUser.name,
+        email: this.adminUser.email,
+        role: this.adminUser.role
+      };
+      
+      if (this.isBrowser) {
+        try {
+          localStorage.setItem('currentUser', JSON.stringify(user));
+        } catch (error) {
+          console.error('Error storing in localStorage:', error);
+        }
+      }
+      
+      this.currentUserSubject.next(user);
+      return of(true);
+    }
+    
+    return of(false);
   }
 
   logout(): void {
-    // Only remove from localStorage in the browser
     if (this.isBrowser) {
       try {
         localStorage.removeItem('currentUser');
@@ -92,17 +100,5 @@ export class AuthService {
     
     this.currentUserSubject.next(null);
     this.router.navigate(['/login']);
-  }
-
-  register(name: string, email: string, password: string): Observable<User> {
-    return this.http.post<User>(`${this.apiUrl}/register`, {
-      name,
-      email,
-      password,
-    });
-  }
-
-  getProfile(): Observable<User> {
-    return this.http.get<User>(`${this.apiUrl}/profile`);
   }
 }
