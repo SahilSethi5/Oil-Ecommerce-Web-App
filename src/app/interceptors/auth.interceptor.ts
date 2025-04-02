@@ -1,21 +1,32 @@
 // src/app/interceptors/auth.interceptor.ts
 import { HttpInterceptorFn } from '@angular/common/http';
 import { inject } from '@angular/core';
+import { isPlatformBrowser, DOCUMENT } from '@angular/common';
 import { AuthService } from '../services/auth.service';
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
-  const authService = inject(AuthService);
+  // In Angular 17 functional interceptor, we need to use a different approach
+  // to determine if we're running in a browser
   
-  // Get the token from the auth service
-  const token = authService.token;
-
-  // If token exists, add it to the Authorization header
-  if (token) {
-    req = req.clone({
-      setHeaders: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+  // Check if window exists (browser environment check)
+  const isBrowser = typeof window !== 'undefined';
+  
+  // Only attempt to get the token in a browser environment
+  if (isBrowser) {
+    try {
+      const authService = inject(AuthService);
+      const token = authService.token;
+      
+      if (token) {
+        req = req.clone({
+          setHeaders: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+      }
+    } catch (error) {
+      console.error('Error in auth interceptor:', error);
+    }
   }
 
   return next(req);

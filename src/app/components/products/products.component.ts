@@ -1,4 +1,4 @@
-// products.component.ts
+// src/app/pages/products/products.component.ts
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -19,20 +19,32 @@ export class ProductsComponent implements OnInit {
   filteredProducts: Product[] = [];
   selectedCategory: string = 'all';
   sortBy: string = 'name';
+  loading: boolean = true;
+  error: string = '';
 
   constructor(
     private productService: ProductService,
     private cartService: CartService
   ) { }
 
-  // In products.component.ts or home.component.ts
-ngOnInit(): void {
-  this.productService.getProducts().subscribe(products => {
-    console.log('Products loaded:', products); // Add this for debugging
-    this.products = products;
-    this.filteredProducts = [...products];
-  });
-}
+  ngOnInit(): void {
+    this.loading = true;
+    console.log('Products component initialized');
+    this.productService.getProducts().subscribe({
+      next: (products) => {
+        console.log('Products received:', products);
+        this.products = products;
+        this.filteredProducts = [...products];
+        this.sortProducts();
+        this.loading = false;
+      },
+      error: (err) => {
+        console.error('Error loading products:', err);
+        this.error = 'Failed to load products. Please try again.';
+        this.loading = false;
+      }
+    });
+  }
 
   filterProducts(): void {
     if (this.selectedCategory === 'all') {
@@ -59,6 +71,13 @@ ngOnInit(): void {
   }
 
   onAddToCart(product: Product): void {
+    console.log('Adding to cart from products page:', product);
     this.cartService.addToCart(product);
+  }
+
+  // Get unique categories for filter dropdown
+  getCategories(): string[] {
+    const categories = this.products.map(p => p.category);
+    return [...new Set(categories)];
   }
 }

@@ -1,4 +1,3 @@
-// cart.component.ts
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
@@ -24,6 +23,11 @@ export class CartComponent implements OnInit {
   }
   
   updateQuantity(item: CartItem, quantity: number): void {
+    if (!item.product.id) {
+      console.error('Product ID is undefined');
+      return;
+    }
+    
     if (quantity <= 0) {
       this.removeItem(item.product.id);
     } else {
@@ -31,7 +35,11 @@ export class CartComponent implements OnInit {
     }
   }
   
-  removeItem(productId: number): void {
+  removeItem(productId?: number): void {
+    if (productId === undefined) {
+      console.error('Cannot remove item: Product ID is undefined');
+      return;
+    }
     this.cartService.removeFromCart(productId);
   }
   
@@ -43,3 +51,4 @@ export class CartComponent implements OnInit {
     return this.cartService.getCartTotal();
   }
 }
+

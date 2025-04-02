@@ -1,9 +1,10 @@
 // src/app/services/auth.service.ts
-import { Injectable } from '@angular/core';
+import { Injectable, PLATFORM_ID, Inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, of } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { Router } from '@angular/router';
+import { isPlatformBrowser } from '@angular/common';
 import { environment } from '../../environments/environment';
 
 export interface User {
@@ -20,13 +21,26 @@ export interface User {
 export class AuthService {
   private apiUrl = `${environment.apiUrl}/auth`;
   private currentUserSubject = new BehaviorSubject<User | null>(null);
+  private isBrowser: boolean;
 
-  constructor(private http: HttpClient, private router: Router) {
-    // Check if user data is in local storage
-    const userData = localStorage.getItem('currentUser');
-    if (userData) {
-      const user: User = JSON.parse(userData);
-      this.currentUserSubject.next(user);
+  constructor(
+    private http: HttpClient,
+    private router: Router,
+    @Inject(PLATFORM_ID) private platformId: Object
+  ) {
+    this.isBrowser = isPlatformBrowser(this.platformId);
+    
+    // Only access localStorage in the browser
+    if (this.isBrowser) {
+      try {
+        const userData = localStorage.getItem('currentUser');
+        if (userData) {
+          const user: User = JSON.parse(userData);
+          this.currentUserSubject.next(user);
+        }
+      } catch (error) {
+        console.error('Error accessing localStorage:', error);
+      }
     }
   }
 
@@ -51,8 +65,15 @@ export class AuthService {
       .post<User>(`${this.apiUrl}/login`, { email, password })
       .pipe(
         map((user) => {
-          // Store user details and jwt token in local storage
-          localStorage.setItem('currentUser', JSON.stringify(user));
+          // Only store in localStorage in the browser
+          if (this.isBrowser) {
+            try {
+              localStorage.setItem('currentUser', JSON.stringify(user));
+            } catch (error) {
+              console.error('Error storing in localStorage:', error);
+            }
+          }
+          
           this.currentUserSubject.next(user);
           return true;
         })
@@ -60,8 +81,15 @@ export class AuthService {
   }
 
   logout(): void {
-    // Remove user from local storage
-    localStorage.removeItem('currentUser');
+    // Only remove from localStorage in the browser
+    if (this.isBrowser) {
+      try {
+        localStorage.removeItem('currentUser');
+      } catch (error) {
+        console.error('Error removing from localStorage:', error);
+      }
+    }
+    
     this.currentUserSubject.next(null);
     this.router.navigate(['/login']);
   }

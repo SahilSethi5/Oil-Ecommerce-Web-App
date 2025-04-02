@@ -1,14 +1,15 @@
 <!-- product-card.component.html -->
 <div class="card h-100 shadow-sm">
-    <img [src]="product.imageUrl" [alt]="product.name" class="card-img-top">
-    <div class="card-body d-flex flex-column">
-      <h5 class="card-title">{{ product.name }}</h5>
-      <p class="card-text text-primary fw-bold">${{ product.price.toFixed(2) }}</p>
-      <p class="card-text text-muted small">{{ product.volume }}</p>
-      <p class="card-text">{{ product.description | slice:0:80 }}...</p>
-      <div class="mt-auto d-flex justify-content-between">
-        <button class="btn btn-outline-primary" [routerLink]="['/products', product.id]">Details</button>
-        <button class="btn btn-primary" (click)="addItemToCart()">Add to Cart</button>
-      </div>
+  <img [src]="product.imageUrl" [alt]="product.name" class="card-img-top">
+  <div class="card-body d-flex flex-column">
+    <h5 class="card-title">{{ product.name }}</h5>
+    <p class="card-text text-primary fw-bold">${{ product.price.toFixed(2) }}</p>
+    <p class="card-text text-muted small">{{ product.volume }}</p>
+    <p class="card-text">{{ product.description | slice:0:80 }}...</p>
+    <div class="mt-auto d-flex justify-content-between">
+      <!-- Use product._id if it exists, otherwise fall back to product.id -->
+      <button class="btn btn-outline-primary" [routerLink]="['/products', product._id || product.id]">Details</button>
+      <button class="btn btn-primary" (click)="addItemToCart()">Add to Cart</button>
     </div>
   </div>
+</div>
