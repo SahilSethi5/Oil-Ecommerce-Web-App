@@ -1,68 +1,35 @@
-import { Injectable, PLATFORM_ID, Inject } from '@angular/core';
-import { Observable, of } from 'rxjs';
-import { isPlatformBrowser } from '@angular/common';
+// src/app/services/order.service.ts
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
 import { Order } from '../models/order.model';
+import { environment } from '../../environments/environment';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class OrderService {
-  private orders: Order[] = [];
-  private isBrowser: boolean;
+  private apiUrl = `${environment.apiUrl}/orders`;
 
-  constructor(@Inject(PLATFORM_ID) private platformId: Object) {
-    this.isBrowser = isPlatformBrowser(this.platformId);
-    
-    // Only try to access localStorage in the browser
-    if (this.isBrowser) {
-      const savedOrders = localStorage.getItem('orders');
-      if (savedOrders) {
-        this.orders = JSON.parse(savedOrders);
-      }
-    }
+  constructor(private http: HttpClient) {}
+
+  createOrder(order: Order): Observable<Order> {
+    return this.http.post<Order>(this.apiUrl, order);
   }
 
-  placeOrder(order: Order): Observable<Order> {
-    // Add order ID and date
-    const newOrder: Order = {
-      ...order,
-      id: Date.now(),
-      orderDate: new Date(),
-      status: 'Pending'
-    };
-    
-    this.orders.push(newOrder);
-    
-    // Only try to access localStorage in the browser
-    if (this.isBrowser) {
-      localStorage.setItem('orders', JSON.stringify(this.orders));
-    }
-    
-    return of(newOrder);
+  getOrder(id: string): Observable<Order> {
+    return this.http.get<Order>(`${this.apiUrl}/${id}`);
   }
 
-  getOrders(): Observable<Order[]> {
-    return of(this.orders);
+  getMyOrders(): Observable<Order[]> {
+    return this.http.get<Order[]>(`${this.apiUrl}/myorders`);
   }
 
-  getOrder(id: number): Observable<Order | undefined> {
-    const order = this.orders.find(o => o.id === id);
-    return of(order);
+  getAllOrders(): Observable<Order[]> {
+    return this.http.get<Order[]>(this.apiUrl);
   }
 
-  // This method would typically be for admin functionality
-  updateOrderStatus(orderId: number, status: string): Observable<boolean> {
-    const order = this.orders.find(o => o.id === orderId);
-    if (order) {
-      order.status = status;
-      
-      // Only try to access localStorage in the browser
-      if (this.isBrowser) {
-        localStorage.setItem('orders', JSON.stringify(this.orders));
-      }
-      
-      return of(true);
-    }
-    return of(false);
+  updateOrderStatus(id: string, status: string): Observable<Order> {
+    return this.http.put<Order>(`${this.apiUrl}/${id}/status`, { status });
   }
 }
